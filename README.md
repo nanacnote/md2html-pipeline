@@ -17,11 +17,14 @@ No wrapper scripts, no CSS, no templates.
 ```
 .
 ├─ pandoc/
+│  ├─ filters/
+│  │  └─ diagram.lua
 │  └─ html.yaml
 │
 └─ README.md
 ```
 
+* `pandoc/filters/diagram.lua` — vendored `pandoc-ext-diagram` Lua filter
 * `pandoc/html.yaml` — project defaults (acts like an rc file)
 * `README.md` — setup and usage instructions
 
@@ -29,8 +32,9 @@ No wrapper scripts, no CSS, no templates.
 
 ## Requirements
 
-* Pandoc **2.19+** (recommended)
-* `pandoc-ext-diagram`
+* Pandoc **3.0+**
+
+The `pandoc-ext-diagram` Lua filter is **bundled** in this repo at `pandoc/filters/diagram.lua` — no separate installation needed.
 
 ---
 
@@ -57,30 +61,6 @@ pandoc --version
 
 ---
 
-## Install pandoc-ext-diagram
-
-`pandoc-ext-diagram` is a Lua filter used to render diagrams such as Mermaid, Graphviz, PlantUML, and others.
-
-### Install (download the Lua filter)
-
-Create a `filters` directory in pandoc's user data directory and download the filter there:
-
-```bash
-mkdir -p ~/.pandoc/filters
-curl -L https://raw.githubusercontent.com/pandoc-ext/diagram/main/_extensions/diagram/diagram.lua \
-  -o ~/.pandoc/filters/pandoc-ext-diagram.lua
-```
-
-Verify that pandoc can locate the filter:
-
-```bash
-pandoc --list-lua-filters
-```
-
-Pandoc will automatically find the filter as long as it is placed in the `filters` subdirectory of the pandoc user data directory (`~/.pandoc/filters/`).
-
----
-
 ## Pandoc Defaults File
 
 ### `pandoc/html.yaml`
@@ -98,7 +78,7 @@ to: html5
 standalone: true
 
 filters:
-  - pandoc-ext-diagram.lua
+  - pandoc/filters/diagram.lua
 
 metadata:
   diagram:

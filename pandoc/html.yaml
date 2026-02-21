@@ -10,7 +10,6 @@ metadata:
   diagram:
     cache: true
 
-syntax-highlighting: true
 highlight-style: pygments
 
 toc: true

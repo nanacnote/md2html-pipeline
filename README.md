@@ -117,40 +117,6 @@ pandoc \
   input.md \
   -o output.html
 ```
-
----
-
-## Writing Markdown
-
-### Mermaid Diagrams
-
-````md
-```mermaid
-graph TD
-  A --> B
-```
-````
-
-### Graphviz / DOT
-
-````md
-```dot
-digraph {
-  A -> B
-}
-```
-````
-
-### Regular Code Blocks (Syntax Highlighted)
-
-````md
-```python
-print("hello")
-```
-````
-
-Diagram blocks are intercepted by `pandoc-ext-diagram`; all other code blocks use Pandoc's built-in syntax highlighting.
-
 ---
 
 ## Adding New Defaults
@@ -172,17 +138,3 @@ To add another output configuration (for example, slides or PDFs):
    ```
 
 Each defaults file is independent and can evolve without affecting others.
-
----
-
-## Notes
-
-* No CSS or templates are included by design
-* No assumptions about hosting or deployment
-* Suitable for local use or CI pipelines
-
----
-
-## License
-
-MIT (or project-specific, if desired)

@@ -1,7 +1,7 @@
 from: markdown+fenced_code_blocks+pipe_tables+task_lists
 to: html5
 
-standalone: true
+standalone: false
 embed-resources: true
 
 filters:

@@ -19,11 +19,15 @@ No wrapper scripts, no CSS, no templates.
 ├─ pandoc/
 │  ├─ filters/
 │  │  └─ diagram.lua
-│  └─ html.yaml
+│  ├─ html.yaml
+│  ├─ html-fragment.yaml
+│  └─ syntax-highlighting.css
 │
 └─ README.md
 ```
-
+defaults for standalone HTML output
+* `pandoc/html-fragment.yaml` — defaults for HTML fragments (no wrapper)
+* `pandoc/syntax-highlighting.css` — reusable CSS for code syntax highlighting
 * `pandoc/filters/diagram.lua` — vendored `pandoc-ext-diagram` Lua filter
 * `pandoc/html.yaml` — project defaults (acts like an rc file)
 * `README.md` — setup and usage instructions
@@ -32,73 +36,174 @@ No wrapper scripts, no CSS, no templates.
 
 ## Requirements
 
-* Pandoc **3.0+**
+**Required:**
+- Pandoc **3.0+** 
 
-The `pandoc-ext-diagram` Lua filter is **bundled** in this repo at `pandoc/filters/diagram.lua` — no separate installation needed.
+**Optional (for diagram rendering):**
+- Graphviz (`dot`) — for graph diagrams
+- Mermaid CLI (`mmdc`) — for flowcharts, sequence, state, etc.
+- PlantUML, TikZ, Asymptote, D2, Cetz — additional diagram engines
+
+The `pandoc-ext-diagram` Lua filter is **bundled** at `pandoc/filters/diagram.lua`.
 
 ---
 
-## Install Pandoc
+## Install
 
-### Ubuntu / Debian
+### Pandoc
 
+**Ubuntu / Debian:**
 ```bash
-sudo apt update
-sudo apt install pandoc
+sudo apt update && sudo apt install pandoc
 ```
 
-### macOS (Homebrew)
-
+**macOS (Homebrew):**
 ```bash
 brew install pandoc
 ```
 
-### Verify
+**Fedora:**
+```bash
+sudo dnf install pandoc
+```
 
+**Verify:**
 ```bash
 pandoc --version
 ```
+
+### Diagram Engines (Optional)
+
+#### Graphviz (dot)
+**Ubuntu / Debian:**
+```bash
+sudo apt install graphviz
+```
+
+**macOS:**
+```bash
+brew install graphviz
+```
+
+**Fedora:**
+```bash
+sudo dnf install graphviz
+```
+
+#### Mermaid CLI
+```bash
+npm install -g @mermaid-js/mermaid-cli
+```
+
+#### PlantUML
+**Ubuntu / Debian:**
+```bash
+sudo apt install plantuml
+```
+
+**macOS:**
+```bash
+brew install plantuml
+```
+
+#### TikZ (LaTeX)
+**Ubuntu / Debian:**
+```bash
+sudo apt install texlive-latex-base texlive-fonts-recommended texlive-latex-extra
+```
+
+**macOS:**
+```bash
+brew install mactex
+```
+
+#### Other engines
+Refer to upstream project docs:
+- [D2 language](https://d2lang.com/)
+- [Asymptote](https://asymptote.sourceforge.io/)
+- [Typst/Cetz](https://typst.app/)
 
 ---
 
 ## Usage
 
-Call Pandoc explicitly and reference the defaults file:
+### Standalone HTML (complete document)
 
 ```bash
-pandoc \
-  --defaults pandoc/html.yaml \
-  input.md \
-  -o output.html
+pandoc --defaults pandoc/html.yaml input.md -o output.html
 ```
 
-You can override any default at runtime:
+Generates a complete HTML file with `<html>`, `<head>`, and `<body>` tags.
+
+### HTML Fragment (for insertion into existing HTML)
 
 ```bash
-pandoc \
-  --defaults pandoc/html.yaml \
-  --toc-depth=2 \
-  input.md \
-  -o output.html
+pandoc --defaults pandoc/html-fragment.yaml input.md -o content.html
 ```
+
+Generates just the body content for injecting into an existing page.
+
+#### Using with Existing Stylesheets
+
+When generating HTML fragments for insertion into your existing pages, include the pre-extracted syntax highlighting CSS once in your main stylesheet:
+
+```css
+/* Add contents of pandoc/syntax-highlighting.css to your main.css */
+```
+
+The `pandoc/syntax-highlighting.css` file contains all Pandoc pygments syntax highlighting rules. Include it once in your codebase to ensure consistent code block styling across all generated fragments.
+
 ---
 
-## Adding New Defaults
+The defaults files bundle:
+- HTML5 output with styling
+- Table of contents
+- Diagram rendering (mermaid, dot, plantuml, tikz, etc.)
+- Syntax highlighting
+- Task lists, pipe tables, etc.
 
-To add another output configuration (for example, slides or PDFs):
+You can override any option at runtime:
 
-1. Create a new defaults file:
+```bash
+pandoc --defaults pandoc/html.yaml \
+  --toc-depth=2 \
+  --css custom.css \
+  input.md -o output.html
+```
 
-   ```bash
-   pandoc/slides.yaml
-   ```
+Or create new defaults files for different outputs (PDF, slides, EPUB, etc.):
 
-2. Adjust options as needed
+```bash
+pandoc --defaults pandoc/pdf.yaml input.md -o output.pdf
+```
 
-3. Call Pandoc with the new defaults:
+### Supported Diagram Types
 
-   ```bash
-   pandoc --defaults pandoc/slides.yaml input.md -o output.html
-   ```
+Use the appropriate code fence based on what you have installed:
 
-Each defaults file is independent and can evolve without affecting others.
+| Engine | Fence | Binary |
+|--------|-------|--------|
+| **Mermaid** | ` ```mermaid ` | `mmdc` |
+| **Graphviz** | ` ```dot ` | `dot` |
+| **PlantUML** | ` ```plantuml ` | `plantuml` |
+| **TikZ** | ` ```tikz ` | `pdflatex` |
+| **Asymptote** | ` ```asymptote ` | `asy` |
+| **D2** | ` ```d2 ` | `d2` |
+| **Cetz** | ` ```cetz ` | `typst` |
+
+---
+
+## Customizing Output
+
+To create a new defaults file for different output (PDF, slides, EPUB):
+
+```bash
+pandoc/pdf.yaml      # for PDF generation
+pandoc/slides.yaml   # for HTML5 slides
+pandoc/epub.yaml     # for EPUB output
+```
+
+Then use it:
+```bash
+pandoc --defaults pandoc/pdf.yaml input.md -o output.pdf
+```

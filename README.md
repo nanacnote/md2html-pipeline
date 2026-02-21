@@ -59,27 +59,25 @@ pandoc --version
 
 ## Install pandoc-ext-diagram
 
-`pandoc-ext-diagram` is an external filter used to render diagrams such as Mermaid, Graphviz, PlantUML, and others.
+`pandoc-ext-diagram` is a Lua filter used to render diagrams such as Mermaid, Graphviz, PlantUML, and others.
 
-### Install via Cargo (recommended)
+### Install (download the Lua filter)
 
-```bash
-cargo install pandoc-ext-diagram
-```
-
-Ensure Cargo binaries are on your PATH:
+Create a `filters` directory in pandoc's user data directory and download the filter there:
 
 ```bash
-export PATH="$HOME/.cargo/bin:$PATH"
+mkdir -p ~/.pandoc/filters
+curl -L https://raw.githubusercontent.com/pandoc-ext/diagram/main/_extensions/diagram/diagram.lua \
+  -o ~/.pandoc/filters/pandoc-ext-diagram.lua
 ```
 
-Verify:
+Verify that pandoc can locate the filter:
 
 ```bash
-pandoc-ext-diagram --help
+pandoc --list-lua-filters
 ```
 
-Pandoc will automatically find the filter as long as it is available on `PATH`.
+Pandoc will automatically find the filter as long as it is placed in the `filters` subdirectory of the pandoc user data directory (`~/.pandoc/filters/`).
 
 ---
 
@@ -100,7 +98,7 @@ to: html5
 standalone: true
 
 filters:
-  - pandoc-ext-diagram
+  - pandoc-ext-diagram.lua
 
 metadata:
   diagram:

@@ -61,42 +61,6 @@ pandoc --version
 
 ---
 
-## Pandoc Defaults File
-
-### `pandoc/html.yaml`
-
-This file defines the shared defaults for the project.
-
-* Markdown → HTML5
-* Diagram rendering via `pandoc-ext-diagram`
-* Syntax highlighting for non-diagram code blocks
-
-```yaml
-from: markdown+fenced_code_blocks+pipe_tables+task_lists
-to: html5
-
-standalone: true
-
-filters:
-  - pandoc/filters/diagram.lua
-
-metadata:
-  diagram:
-    cache: true
-
-syntax-highlighting: true
-highlight-style: pygments
-
-toc: true
-toc-depth: 3
-number-sections: true
-
-html-q-tags: true
-wrap: none
-```
-
----
-
 ## Usage
 
 Call Pandoc explicitly and reference the defaults file:

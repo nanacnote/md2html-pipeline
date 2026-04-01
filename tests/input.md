@@ -189,59 +189,54 @@ graph TD
   V --> W[End]
 ```
 
-Sequence Diagram (complex):
+Dependency graph (Graphviz dot):
 
-```mermaid
-sequenceDiagram
-  participant User
-  participant Client as Web Client
-  participant API as API Server
-  participant DB as Database
-  participant Cache
-  
-  User->>Client: Load Page
-  activate Client
-  Client->>API: Request Data
-  activate API
-  
-  API->>Cache: Check Cache
-  activate Cache
-  alt Cache Hit
-    Cache-->>API: Return Cached Data
-  else Cache Miss
-    deactivate Cache
-    API->>DB: Query Records
-    activate DB
-    DB-->>API: Return Records
-    deactivate DB
-    API->>Cache: Store in Cache
-    activate Cache
-    Cache-->>API: Stored
-    deactivate Cache
-  end
-  
-  API-->>Client: JSON Response
-  deactivate API
-  Client->>Client: Render HTML
-  Client-->>User: Display Page
-  deactivate Client
-  
-  User->>Client: Click Button
-  activate Client
-  Client->>API: Submit Form
-  activate API
-  API->>DB: Write Record
-  activate DB
-  DB-->>API: Success
-  deactivate DB
-  API->>Cache: Invalidate
-  activate Cache
-  Cache-->>API: Cleared
-  deactivate Cache
-  API-->>Client: 200 OK
-  deactivate API
-  Client-->>User: Show Confirmation
-  deactivate Client
+```dot
+digraph dependencies {
+  rankdir=LR;
+  node [shape=box, style=filled, fillcolor="#f0f0f0"];
+
+  app -> api;
+  app -> auth;
+  api -> db;
+  api -> cache;
+  auth -> db;
+  cache -> db;
+
+  app   [label="App"];
+  api   [label="API Server"];
+  auth  [label="Auth Service"];
+  db    [label="Database"];
+  cache [label="Cache"];
+}
+```
+
+Component diagram (PlantUML):
+
+```plantuml
+@startuml
+skinparam componentStyle rectangle
+
+package "Frontend" {
+  [Web Client]
+}
+
+package "Backend" {
+  [API Server]
+  [Auth Service]
+}
+
+package "Data" {
+  [Database]
+  [Cache]
+}
+
+[Web Client]   --> [API Server]   : HTTP
+[Web Client]   --> [Auth Service] : OAuth
+[API Server]   --> [Database]     : SQL
+[API Server]   --> [Cache]        : Redis
+[Auth Service] --> [Database]     : SQL
+@enduml
 ```
 
 ## Math

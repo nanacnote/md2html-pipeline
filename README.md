@@ -24,8 +24,11 @@ No wrapper scripts, no templates.
 │  ├─ filters/
 │  │  ├─ diagram.lua
 │  │  └─ pagebreak.lua
+│  ├─ templates/
+│  │  └─ toc.html
 │  ├─ html.yaml
 │  ├─ html-fragment.yaml
+│  ├─ html-toc.yaml
 │  ├─ pdf.yaml
 │  └─ syntax-highlighting.css
 │
@@ -34,10 +37,12 @@ No wrapper scripts, no templates.
 
 * `pandoc/html.yaml` — defaults for standalone HTML output
 * `pandoc/html-fragment.yaml` — defaults for HTML fragments (no wrapper)
+* `pandoc/html-toc.yaml` — outputs **only the TOC** as a collapsible `<details>` block (no document body)
 * `pandoc/pdf.yaml` — defaults for PDF output via XeLaTeX
 * `pandoc/syntax-highlighting.css` — reusable CSS for code syntax highlighting
 * `pandoc/filters/diagram.lua` — vendored `pandoc-ext-diagram` Lua filter
 * `pandoc/filters/pagebreak.lua` — portable page break filter
+* `pandoc/templates/toc.html` — template that wraps the TOC in a collapsible `<details>` block
 
 ---
 
@@ -142,6 +147,14 @@ pandoc --defaults pandoc/html.yaml input.md -o output.html
 
 Generates a complete HTML file with `<html>`, `<head>`, and `<body>` tags.
 
+### HTML with Collapsible TOC
+
+```bash
+pandoc --defaults pandoc/html-toc.yaml input.md -o output.html
+```
+
+Outputs **only the table of contents** — no document body. The `toc.html` template renders just the TOC wrapped in a collapsible `<details>` block, making it suitable for injecting a standalone nav into an existing page.
+
 ### HTML Fragment (for insertion into existing HTML)
 
 ```bash
@@ -189,15 +202,15 @@ pandoc --defaults pandoc/html.yaml \
 
 Use the appropriate code fence based on what you have installed:
 
-| Engine | Fence | Binary |
-|--------|-------|--------|
-| **Mermaid** | ` ```mermaid ` | `mmdc` |
-| **Graphviz** | ` ```dot ` | `dot` |
-| **PlantUML** | ` ```plantuml ` | `plantuml` |
-| **TikZ** | ` ```tikz ` | `pdflatex` |
-| **Asymptote** | ` ```asymptote ` | `asy` |
-| **D2** | ` ```d2 ` | `d2` |
-| **Cetz** | ` ```cetz ` | `typst` |
+| Engine        | Fence            | Binary     |
+| ------------- | ---------------- | ---------- |
+| **Mermaid**   | ` ```mermaid `   | `mmdc`     |
+| **Graphviz**  | ` ```dot `       | `dot`      |
+| **PlantUML**  | ` ```plantuml `  | `plantuml` |
+| **TikZ**      | ` ```tikz `      | `pdflatex` |
+| **Asymptote** | ` ```asymptote ` | `asy`      |
+| **D2**        | ` ```d2 `        | `d2`       |
+| **Cetz**      | ` ```cetz `      | `typst`    |
 
 ---
 

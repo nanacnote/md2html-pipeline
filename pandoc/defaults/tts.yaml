@@ -1,0 +1,7 @@
+from: markdown+fenced_code_blocks+pipe_tables+task_lists
+to: plain
+
+filters:
+  - pandoc/filters/tts.lua
+
+wrap: none
